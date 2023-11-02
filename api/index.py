@@ -6,7 +6,8 @@ import os
 
 # Define the URL
 url = "https://www.real.discount/udemy-coupon-code/"
-
+# Install the selenium package using pip
+os.system('pip install selenium')
 # Function to scrape and process the data
 def scrape_data(url):
     # Initialize a webdriver (e.g., Chrome)
