@@ -1,7 +1,6 @@
-import os
 from selenium import webdriver
 import re
-from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from http.server import BaseHTTPRequestHandler
 
 def scrape_data(url):
     # Initialize a webdriver (e.g., Chrome)
@@ -15,6 +14,9 @@ def scrape_data(url):
     # Wait for the page to load completely (you can adjust the time as needed)
     driver.implicitly_wait(10)
 
+    # Wait for an additional 5 seconds
+    time.sleep(5)
+
     # Get the content after JavaScript execution
     dynamic_content = driver.page_source
 
@@ -22,7 +24,8 @@ def scrape_data(url):
     driver.quit()
 
     # Process the content (similar to your existing code)
-    # ...
+    matches = re.findall(r'<a.*?href=[\'"](.*?udemy.com/course.*?)["\']', dynamic_content)
+    processed_data = '\n'.join(matches)
 
     return processed_data
 
@@ -36,26 +39,17 @@ class RequestHandler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(processed_data.encode('utf-8'))
 
-# Main function that will be executed by Vercel
-def handler(request):
-    # Start an HTTP server to handle incoming requests
-    server_address = ('', 8000)
-    httpd = ThreadingHTTPServer(server_address, RequestHandler)
+# Define the URL
+url = "https://www.real.discount/udemy-coupon-code/"
 
-    # Serve HTTP requests in a separate thread
-    import threading
-    server_thread = threading.Thread(target=httpd.serve_forever)
-    server_thread.daemon = True
-    server_thread.start()
+# Create an instance of the RequestHandler
+handler = RequestHandler()
 
-    # Scrape data
-    url = "https://www.real.discount/udemy-coupon-code/"
-    processed_data = scrape_data(url)
-
-    # Close the HTTP server
-    httpd.shutdown()
-
+# This part is specific to Vercel
+def vercel_handler(request):
+    # Trigger the scraping function when the function is invoked
+    handler.do_GET()
     return {
         'statusCode': 200,
-        'body': processed_data
+        'body': 'Scraping completed'
     }
