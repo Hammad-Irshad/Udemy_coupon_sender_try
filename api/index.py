@@ -1,5 +1,5 @@
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-from selenium import webdriver
+
 import time
 import re
 import os
@@ -8,6 +8,8 @@ import os
 url = "https://www.real.discount/udemy-coupon-code/"
 # Install the selenium package using pip
 os.system('pip install selenium')
+
+from selenium import webdriver
 # Function to scrape and process the data
 def scrape_data(url):
     # Initialize a webdriver (e.g., Chrome)
