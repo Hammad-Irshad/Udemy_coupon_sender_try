@@ -1,4 +1,7 @@
 {
+  "redirects": [
+    { "source": "/", "destination": "/api" }
+  ],
   "functions": {
     "api/scrape": {
       "handler": "scrape_script.vercel_handler",
